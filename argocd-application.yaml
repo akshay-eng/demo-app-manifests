@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/ak3hay/quest-diagnostics-manifests.git
+    repoURL: https://github.com/akshay-eng/demo-app-manifests.git
     targetRevision: main
     path: base
   destination:
