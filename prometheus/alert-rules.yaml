@@ -1,0 +1,45 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: quest-diagnostics-alerts
+  namespace: quest-diagnostics
+  labels:
+    release: prometheus
+spec:
+  groups:
+    - name: quest-diagnostics.pod.rules
+      rules:
+        - alert: QuestPodCrashLooping
+          expr: |
+            rate(kube_pod_container_status_restarts_total{namespace="quest-diagnostics"}[5m]) * 300 > 3
+          for: 1m
+          labels:
+            severity: critical
+            team: quest-devops
+          annotations:
+            summary: "Pod {{ $labels.pod }} is crash looping in quest-diagnostics"
+            description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has restarted more than 3 times in the last 5 minutes."
+            runbook: "Check pod logs and recent ArgoCD deployments"
+
+        - alert: QuestDeploymentReplicasMismatch
+          expr: |
+            kube_deployment_spec_replicas{namespace="quest-diagnostics"}
+              != kube_deployment_status_ready_replicas{namespace="quest-diagnostics"}
+          for: 2m
+          labels:
+            severity: warning
+            team: quest-devops
+          annotations:
+            summary: "Deployment {{ $labels.deployment }} has replica mismatch"
+            description: "Deployment {{ $labels.deployment }} expected {{ $value }} replicas but not all are ready."
+
+        - alert: QuestBackendHealthCheckFailing
+          expr: |
+            probe_success{job="quest-backend-probe"} == 0
+          for: 1m
+          labels:
+            severity: critical
+            team: quest-devops
+          annotations:
+            summary: "Quest backend health check is failing"
+            description: "The /health endpoint of quest-lab-backend is not responding successfully."
