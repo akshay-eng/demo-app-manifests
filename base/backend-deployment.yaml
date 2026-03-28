@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ak3hay/quest-lab-backend:d306bae6710f9b5e7378a0918e35a7ea695a8dd0
+          image: ak3hay/quest-lab-backend:90dd23610052dd649bac1e141eb9babd9fa66dfc
           ports:
             - containerPort: 8000
           env:
