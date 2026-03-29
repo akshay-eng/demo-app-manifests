@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ak3hay/quest-lab-frontend:6626294a7cce2aae0061035e84feadee56a2d3a9
+          image: ak3hay/quest-lab-frontend:e3abf29e5231832f691c5bfbe90beeacabbe101b
           ports:
             - containerPort: 80
           readinessProbe:
